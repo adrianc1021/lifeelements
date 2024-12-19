@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Official Receipt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 添加viewport元標籤 -->
+    <style>
+        /* Import Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .receipt-container {
+            max-width: 800px; /* 限制最大寬度以適應大屏幕 */
+            width: 100%; /* 使容器寬度適應屏幕寬度 */
+            margin: 20px auto; /* 使用百分比和px單位適應不同設備 */
+            padding: 20px;
+            background-color: #fff;
+            box-sizing: border-box;
+            position: relative;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        /* Logo Styling */
+        .logo {
+            text-align: left;
+            margin-bottom: -17px;
+        }
+
+        .logo img {
+            max-width: 20%; /* 確保在小屏幕上圖片不會溢出 */
+            height: auto;
+        }
+
+        .official-receipt-title {
+            font-size: 30px;
+            text-align: middle;
+            font-weight: bold;
+            color: #002436;
+            margin-bottom: 18px;
+        }
+
+        .date-section {
+            font-size: 16px;
+            text-align: right;
+            margin-bottom: -17px;
+            color: #333;
+        }
+        
+        /* 控制發票編號的字體大小 */
+        .invoice-no {
+            text-align: right;
+            font-size: 11px;  /* 你可以根据需要调整字体大小 */
+            font-weight: lighter; /* 让发票编号更加突出 */
+            margin-top: 15px;  /* 添加顶部间距 */
+        }
+
+
+        .client-info {
+            text-align: middle;
+            margin-bottom: 26px;
+        }
+
+        .client-info p {
+            margin: 10px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .section h3 {
+            font-size: 18px;
+            color: #002436;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+
+        .section p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #333;
+            word-wrap: break-word; /* 防止內容溢出 */
+        }
+
+        .invoice-details table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed; /* 防止表格內容溢出 */
+        }
+
+        .invoice-details th,
+        .invoice-details td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+            font-size: 14px;
+            word-wrap: break-word; /* 防止內容溢出 */
+        }
+
+        .invoice-details th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+
+        .invoice-summary {
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        .invoice-summary p {
+            margin: 5px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* Signature Section */
+        .signature {
+            margin-top: 60px;
+            text-align: right;
+            font-size: 16px;
+            position: relative;
+        }
+
+        .signature .doctor-info {
+            text-align: right;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-top: 30px;
+        }
+
+        .signature .staff-name {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .signature .doctor-title {
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .signature p {
+            margin: 5px 0;
+            font-weight: 300;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 59px;
+            text-align: center;
+            font-size: 13px;
+            color: #777;
+        }
+
+        /* Hidden Form */
+        #form-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            overflow-y: auto; /* 允許在手機上滾動 */
+        }
+
+        #form-container form {
+            background-color: #fff;
+            padding: 20px;
+            margin: 50px auto;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: 90%; /* 防止在小屏幕上超出視窗 */
+            box-sizing: border-box;
+        }
+
+        #form-container h2 {
+            margin-top: 0;
+            color: #002436;
+            text-align: center;
+        }
+
+        #form-container label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: 600;
+        }
+
+        #form-container input,
+        #form-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        #form-container input:focus,
+        #form-container textarea:focus {
+            border-color: #004080;
+            outline: none;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            background-color: #f0f0f0;
+            border-radius: 25px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar ul {
+            display: flex;
+            flex-wrap: wrap; /* 在小屏幕上允許換行 */
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            justify-content: space-between;
+        }
+
+        .progress-bar li {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            color: #aaa;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar li::before {
+            content: attr(data-step);
+            display: block;
+            margin: 0 auto 5px;
+            background-color: #ccc;
+            color: #fff;
+            width: 25px;
+            height: 25px;
+            line-height: 25px;
+            border-radius: 50%;
+        }
+
+        .progress-bar li.active::before,
+        .progress-bar li.completed::before {
+            background-color: #004080;
+        }
+
+        .progress-bar li.completed {
+            color: #004080;
+        }
+
+        .progress-bar li::after {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background-color: #ccc;
+            z-index: -1;
+        }
+
+        .progress-bar li:first-child::after {
+            display: none;
+        }
+
+        .progress-bar li.completed::after {
+            background-color: #004080;
+        }
+
+        #form-container button {
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: linear-gradient(45deg, #004080, #0073e6);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: background 0.3s ease;
+            display: inline-block;
+            width: auto;
+        }
+
+        #form-container button:hover {
+            background: linear-gradient(45deg, #003366, #005bb5);
+        }
+
+        #form-navigation {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap; /* 在小屏幕上允許按鈕換行 */
+        }
+
+        #form-navigation button {
+            flex: 1 1 45%; /* 在小屏幕上按鈕寬度為45% */
+            margin: 5px;
+        }
+
+        #clear-form-btn {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: block;
+            width: 100%;
+        }
+
+        #clear-form-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        /* Show form button */
+        #show-form-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px;
+            background-color: #002436;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 1000;
+        }
+
+        #show-form-btn:hover {
+            background-color: #014055;
+        }
+
+        /* Print button */
+        #print-btn {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            padding: 15px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 1000;
+        }
+
+        #print-btn:hover {
+            background-color: #218838;
+        }
+
+        /* Responsive adjustments */
+        @media screen and (max-width: 600px) {
+            .official-receipt-title {
+                font-size: 29px;
+            }
+
+            .section h3 {
+                font-size: 15px;
+            }
+
+            #form-container form {
+                margin: 20px auto;
+                padding: 15px;
+            }
+
+            #show-form-btn, #print-btn {
+                padding: 12px;
+                font-size: 18px;
+            }
+
+            .logo img {
+                max-width: 10%;
+            }
+        }
+
+        /* Print adjustments */
+        @media print {
+            body {
+                background-color: #fff;
+            }
+            .receipt-container {
+                box-shadow: none;
+                margin: 0;
+            }
+            #show-form-btn, #print-btn, #form-container {
+                display: none;
+            }
+            .footer {
+                position: static;
+                bottom: 20mm;
+                left: 20mm;
+                right: 20mm;
+            }
+        }
+
+        /* Error message styling */
+        .error {
+            color: red;
+            display: none;
+            font-size: 12px;
+        }
+
+        /* Success message styling */
+        .success {
+            color: green;
+            display: none;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="receipt-container" id="receipt-container">
+    <!-- Logo Section -->
+    <div class="logo">
+        <img src="https://static.wixstatic.com/media/c27715_c4633056cbc74943818225617bb2b178~mv2.jpg/v1/fill/w_320,h_458,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/c27715_c4633056cbc74943818225617bb2b178~mv2.jpg" alt="client Logo">
+    </div>
+
+    <!-- Title -->
+    <h1 class="official-receipt-title">INVOICE</h1>
+
+    <!-- Date Section -->
+    <div class="date-section">
+        Date: <span id="receipt-date"></span>
+    </div>
+    
+    <div class="invoice-no">
+
+        <h2>Invoice No: <span id="invoice-no"></span></h2>
+    </div>
+
+    <!-- client Information -->
+    <div class="client-info">
+        <p><span id="client-address">Unit 4, 1/F, Fu Hang Industrial Building, 1 Hok Yuen Street East, Hunghom, Kowloon, HONG KONG.</span></p>
+        <p>Phone: <span id="client-phone">(852) 2314 8983</span></p>
+    </div>
+
+    <!-- Client Information -->
+    <div class="section Client-info">
+        <h3>Client Information</h3>
+        <p>Full Name: <span id="client-name">[Client Name]</span></p>
+        <p>Address: <span id="address">[Client Address]</span></p>
+        <p>Contact Telephone: <span id="contact-telephone">[Contact Telephone]</span></p>
+    </div>
+
+    <!-- Doctor Information -->
+    <div class="section doctor-info">
+        <h3>Staff Information</h3>
+        <p>Responsible staff: <span id="staff-name">[Staff Name]</span></p>
+    </div>
+
+    <!-- Invoice Details -->
+    <div class="section invoice-details">
+        <h3>Invoice Details</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item Description</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Amount (HKD)</th>
+                </tr>
+            </thead>
+            <tbody id="invoice-items">
+                <!-- Items will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Invoice Summary -->
+    <div class="invoice-summary">
+        <p>Total Amount: HKD $<span id="total-amount">0.00</span></p>
+    </div>
+
+    <!-- Signature -->
+    <div class="signature">
+        <div class="doctor-info">
+            <p class="staff-name"></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        Thank you for your visit! If you have any questions, please feel free to contact us.
+    </div>
+</div>
+
+<!-- Show form button -->
+<button id="show-form-btn" aria-label="Input Data">📝</button>
+
+<!-- Print button -->
+<button id="print-btn" onclick="window.print()" aria-label="Print Receipt">🖨️</button>
+
+<!-- Hidden Form (Data Entry) -->
+<div id="form-container">
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <ul>
+            <li class="active" data-step="1">Client Info</li>
+            <li data-step="2">Staff Info</li>
+            <li data-step="3">Invoice Items</li>
+        </ul>
+    </div>
+
+    <form id="data-entry-form">
+        <h2>Input Data</h2>
+
+        <!-- Step 1: Client Information -->
+        <div class="form-step" id="step-1">
+            <label for="client-name-input">Full Name:</label>
+            <input type="text" id="client-name-input" required aria-required="true">
+            <div id="name-error" class="error">Name cannot be empty.</div>
+
+            <label for="address-input">Client Address:</label>
+            <input type="text" id="address-input" required aria-required="true">
+
+            <label for="contact-telephone-input">Contact Telephone:</label>
+            <input type="text" id="contact-telephone-input" required aria-required="true">
+
+            <div id="form-navigation">
+                <button type="button" onclick="nextStep()" aria-label="Next Step">Next Step</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Doctor Information -->
+        <div class="form-step" id="step-2" style="display:none;">
+            <label for="staff-name-input">Responsible staff：</label>
+            <input type="text" id="staff-name-input" required aria-required="true">
+
+            <!-- Date Input -->
+            <label for="date-input">Date:</label>
+            <input type="date" id="date-input" required aria-required="true">
+
+            <div id="form-navigation">
+                <button type="button" onclick="prevStep()" aria-label="Previous Step">Previous</button>
+                <button type="button" onclick="nextStep()" aria-label="Next Step">Next Step</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Invoice Items -->
+        <div class="form-step" id="step-3" style="display:none;">
+            <h3>Invoice Items</h3>
+            <div id="items-container">
+                <div class="item">
+                    <label for="description-1">Item Description:</label>
+                    <input type="text" id="description-1" required aria-required="true">
+
+                    <label for="quantity-1">Quantity:</label>
+                    <input type="number" id="quantity-1" value="1" min="1" required aria-required="true">
+                    
+                    <label for="unit-1">Unit Price:</label>
+                    <input type="number" id="unit-1" value="0" min="0" step="0.01" required aria-required="true">
+
+                    <label for="amount-1">Amount (HKD):</label>
+                    <input type="number" id="amount-1" value="0" min="0" step="0.01" required aria-required="true">
+                </div>
+            </div>
+            <button type="button" onclick="addItem()" aria-label="Add Item">Add Item</button>
+
+            <!-- Total Amount and Signature -->
+
+            <label for="signature-input">Authorized Signature:</label>
+            <input type="text" id="signature-input">
+
+            <div id="form-navigation">
+                <button type="button" onclick="prevStep()" aria-label="Previous Step">Previous</button>
+                <button type="submit" aria-label="Generate Receipt">Generate Receipt</button>
+            </div>
+            <button id="clear-form-btn" type="button" onclick="clearForm()" aria-label="Clear Form">Clear Form</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    let currentStep = 1;
+    const totalSteps = 3;
+
+    function nextStep() {
+        if (validateCurrentStep()) {
+            if (currentStep < totalSteps) {
+                document.getElementById(`step-${currentStep}`).style.display = 'none';
+                currentStep++;
+                document.getElementById(`step-${currentStep}`).style.display = 'block';
+                updateProgressBar();
+                window.scrollTo(0, 0); // 移動到頁面頂部
+            }
+        }
+    }
+
+    function prevStep() {
+        if (currentStep > 1) {
+            document.getElementById(`step-${currentStep}`).style.display = 'none';
+            currentStep--;
+            document.getElementById(`step-${currentStep}`).style.display = 'block';
+            updateProgressBar();
+            window.scrollTo(0, 0); // 移動到頁面頂部
+        }
+    }
+
+    function validateCurrentStep() {
+        const inputs = document.querySelectorAll(`#step-${currentStep} input`);
+        let valid = true;
+        inputs.forEach(input => {
+            if (!input.checkValidity()) {
+                input.reportValidity();
+                valid = false;
+            }
+        });
+        return valid;
+    }
+    
+    function updateProgressBar() {
+        const steps = document.querySelectorAll('.progress-bar li');
+        steps.forEach((step, index) => {
+            if (index < currentStep - 1) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+            } else if (index === currentStep - 1) {
+                step.classList.add('active');
+                step.classList.remove('completed');
+            } else {
+                step.classList.remove('active', 'completed');
+            }
+        });
+    }
+
+function addItem() {
+    const itemCount = document.querySelectorAll('#items-container .item').length + 1;
+    const itemsContainer = document.getElementById('items-container');
+
+    const itemDiv = document.createElement('div');
+    itemDiv.classList.add('item');
+
+    itemDiv.innerHTML = `
+        <label for="description-${itemCount}">Item Description:</label>
+        <input type="text" id="description-${itemCount}" required aria-required="true">
+
+        <label for="quantity-${itemCount}">Quantity:</label>
+        <input type="number" id="quantity-${itemCount}" value="1" min="1" required aria-required="true" oninput="updateAmount(${itemCount})">
+        
+        <label for="unit-${itemCount}">Unit Price:</label>
+        <input type="number" id="unit-${itemCount}" value="0" min="0" step="0.01" required aria-required="true" oninput="updateAmount(${itemCount})">
+
+        <label for="amount-${itemCount}">Amount (HKD):</label>
+        <input type="number" id="amount-${itemCount}" value="0" min="0" step="0.01" readonly>
+    `;
+
+    itemsContainer.appendChild(itemDiv);
+}
+
+    function clearForm() {
+        localStorage.clear();
+        document.getElementById('data-entry-form').reset();
+        alert('Form has been cleared.');
+        currentStep = 1;
+        updateProgressBar();
+        showCurrentStep();
+    }
+    
+    function updateAmount(itemIndex) {
+    const quantity = parseFloat(document.getElementById(`quantity-${itemIndex}`).value) || 0;
+    const unit = parseFloat(document.getElementById(`unit-${itemIndex}`).value) || 0;
+    const amount = quantity * unit;
+
+    // 更新金額欄位
+    document.getElementById(`amount-${itemIndex}`).value = amount.toFixed(2);
+
+    // 更新總金額
+    updateTotalAmount();
+}
+
+    function saveFormData() {
+        const inputs = document.querySelectorAll('#data-entry-form input');
+        const formData = {};
+        inputs.forEach(input => {
+            formData[input.id] = input.value;
+        });
+        localStorage.setItem('formData', JSON.stringify(formData));
+    }
+    
+    function updateTotalAmount() {
+    const items = document.querySelectorAll('#items-container .item');
+    let totalAmount = 0;
+
+    items.forEach((item, index) => {
+        const amount = parseFloat(document.getElementById(`amount-${index + 1}`).value) || 0;
+        totalAmount += amount;
+    });
+
+    // 更新總金額顯示
+    document.getElementById('total-amount').textContent = totalAmount.toFixed(2);
+}
+
+    function loadFormData() {
+        const savedData = localStorage.getItem('formData');
+        if (savedData) {
+            const formData = JSON.parse(savedData);
+            for (const key in formData) {
+                if (formData.hasOwnProperty(key) && document.getElementById(key)) {
+                    document.getElementById(key).value = formData[key];
+                }
+            }
+        }
+    }
+
+    function showCurrentStep() {
+        for (let i = 1; i <= totalSteps; i++) {
+            document.getElementById(`step-${i}`).style.display = (i === currentStep) ? 'block' : 'none';
+        }
+    }
+
+    // Show and hide form
+    const showFormBtn = document.getElementById('show-form-btn');
+    const formContainer = document.getElementById('form-container');
+    const dataEntryForm = document.getElementById('data-entry-form');
+
+    showFormBtn.addEventListener('click', () => {
+        formContainer.style.display = 'block';
+        loadFormData();
+        updateProgressBar();
+    });
+
+    // Close form when clicking outside the form content
+    formContainer.addEventListener('click', (e) => {
+        if (e.target === formContainer) {
+            formContainer.style.display = 'none';
+        }
+    });
+
+    // Real-time validation: Name
+    const nameInput = document.getElementById('client-name-input');
+    const nameError = document.getElementById('name-error');
+
+    nameInput.addEventListener('input', function() {
+        if (nameInput.value.trim() === '') {
+            nameError.style.display = 'block';
+            nameInput.style.borderColor = 'red';
+        } else {
+            nameError.style.display = 'none';
+            nameInput.style.borderColor = 'green';
+        }
+    });
+
+    // Populate receipt with data from form and calculate total amount
+dataEntryForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Date
+    const dateValue = document.getElementById('date-input').value;
+    document.getElementById('receipt-date').textContent = dateValue;
+
+    // Client Information
+    document.getElementById('client-name').textContent = document.getElementById('client-name-input').value;
+    document.getElementById('address').textContent = document.getElementById('address-input').value;
+    document.getElementById('contact-telephone').textContent = document.getElementById('contact-telephone-input').value;
+
+    // Staff Information
+    document.getElementById('staff-name').textContent = document.getElementById('staff-name-input').value;
+
+    // Invoice Items
+    const invoiceItemsContainer = document.getElementById('invoice-items');
+    invoiceItemsContainer.innerHTML = '';
+    let totalAmount = 0;
+
+    const items = document.querySelectorAll('#items-container .item');
+    items.forEach((item, index) => {
+        const description = document.getElementById(`description-${index + 1}`).value;
+        const quantity = parseFloat(document.getElementById(`quantity-${index + 1}`).value) || 0;
+        const unit = parseFloat(document.getElementById(`unit-${index + 1}`).value) || 0;
+        const amount = quantity * unit;
+
+        if (description && quantity > 0 && unit > 0) {
+            const row = document.createElement('tr');
+
+            const descriptionCell = document.createElement('td');
+            descriptionCell.textContent = description;
+            row.appendChild(descriptionCell);
+
+            const quantityCell = document.createElement('td');
+            quantityCell.textContent = quantity;
+            row.appendChild(quantityCell);
+
+            const unitCell = document.createElement('td');
+            unitCell.textContent = unit.toFixed(2);
+            row.appendChild(unitCell);
+
+            const amountCell = document.createElement('td');
+            amountCell.textContent = amount.toFixed(2);
+            row.appendChild(amountCell);
+
+            invoiceItemsContainer.appendChild(row);
+
+            // 計算總金額
+            totalAmount += amount;
+        }
+    });
+
+        // Update total amount
+        document.getElementById('total-amount').textContent = totalAmount.toFixed(2);
+
+        // Save form data
+        saveFormData();
+
+        // Hide form after submission
+        formContainer.style.display = 'none';
+
+        // Show success message (you can customize this behavior)
+        alert('Receipt has been generated successfully!');
+
+        // Scroll to the top of the receipt
+        window.scrollTo(0, 0);
+    });
+
+        let currentNum = 1000;
+
+// 生成 Invoice No. 的函數
+function generateInvoiceNo() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  // 使用順序編號代替隨機數
+  const sequentialNum = currentNum++;
+
+  // 生成年月日 + 順序編號的發票號碼：YYYYMMDD + 順序編號
+  const invoiceNo = `${year}${month}${day}${sequentialNum}`;
+  return invoiceNo;
+}
+
+// 頁面加載後自動生成 Invoice No.
+window.onload = function () {
+  document.getElementById('invoice-no').innerText = generateInvoiceNo();
+}
+
+</script>
+
+</body>
+</html>
